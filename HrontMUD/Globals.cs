@@ -8,6 +8,7 @@ namespace HrontMUD
 {
     internal class Globals
     {
-        internal static List<Clients> ClientList = new();
+        internal static List<Connection> ClientList = new();
+        internal static List<Player> PlayerList = new();
     }
 }
