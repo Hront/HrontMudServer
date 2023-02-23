@@ -26,6 +26,11 @@ namespace HrontMUD
         int Wis;
         int Int;
 
+        public Player(string name)
+        {
+            userName = name;
+        }
+
         //public List<Skills> skillsList = new ();
         //public List<Affects> affects = new ();
 

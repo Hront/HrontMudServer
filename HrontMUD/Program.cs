@@ -4,8 +4,8 @@
     {
         static void Main()
         {
-            Server server = new(); //Создаем экземпляр класса Server.
-            server.Acceptor(); //Вызываем асинхронный метод для принятия подключений и комманд от клиента.
+            Server server = new();
+            Task.Run(server.ListenAsync);
             Console.ReadLine();
         }
     }

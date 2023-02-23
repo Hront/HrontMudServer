@@ -9,22 +9,42 @@ namespace HrontMUD
 {
     internal class Server
     {
-        private readonly TcpListener server = new(IPAddress.Loopback, 4444); //Создаем слушающий сокет.
+        private readonly TcpListener listener = new(IPAddress.Loopback, 4444); //Создаем слушающий сокет.
         public Server()
         {
             Globals globals = new(); // Cоздаем экземпляр класса Globals.
             Commands commands = new(); //Методы вызываемые командами.
             GameLoop gameLoop = new();
         }
-        internal async void Acceptor() //Асинхронный метод принимаеющий новые подключения и команды от клиентов.
+        internal async Task ListenAsync()
         {
-            server.Start(); //Старт прослушивания.
-            while (true)
+            try
             {
-                Console.WriteLine("Ждем новые подключения");
-                Connection client = new(await server.AcceptTcpClientAsync());//Принимаем подключения и создаем экземпляр класса Clients под каждое подключение.
-                client.GetCommand();//Вызываем асинхронный метод класса Clients для получения команд от клиента.
+                listener.Start();
+                while (true)
+                {
+                    TcpClient tcpClient = await listener.AcceptTcpClientAsync();
+                    Connection client = new(tcpClient);
+                    Console.WriteLine($"Client connected: {tcpClient.Client.RemoteEndPoint}");
+                    await Task.Run(client.ClientLoop);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                ServerStop();
+            }
+        }
+        private void ServerStop()
+        {
+            foreach (var client in Globals.clientList)
+            {
+                client.Close();
+            }
+            listener.Stop();
         }
     }
 }

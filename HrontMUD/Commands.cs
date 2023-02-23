@@ -11,9 +11,9 @@ namespace HrontMUD
     {
         internal static void CmdWho(Connection client)
         {
-            foreach(Connection clients in Globals.ClientList)
+            foreach(Connection clients in Globals.clientList)
             {
-                client.SendMessage(clients.Player.userName);
+                client.SendMessage(clients.player.userName);
             }
         }
     }
