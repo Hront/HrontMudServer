@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -13,10 +15,10 @@ namespace HrontMUD
 {
     internal class Connection
     {
-        private readonly TcpClient client;
-        private readonly StreamWriter Writer;
-        private readonly StreamReader Reader;
-        public Player? player;
+        public TcpClient client;
+        public StreamWriter Writer;
+        public StreamReader Reader;
+        public Player player;
 
         internal Connection(TcpClient tcpClient)
         {
@@ -24,47 +26,18 @@ namespace HrontMUD
             var stream = client.GetStream();
             Reader = new(stream);
             Writer = new(stream);
+            Autent autent = new(this);
+            player = autent.NewPlayer();
         }
-        public async void ClientLoop()
+        public async Task ClientLoop()
         {
             try
             {
-                for (; ; )
-                {
-                    SendMessage("Введите имя персонажа.");
-                    var name = await Reader.ReadLineAsync();
-                    if (name != null && name != "create")
-                    {
-                        Player? result = Globals.playerList.Find(x => x.userName == name);
-                        if (result != null)
-                        {
-                            player = result;
-                            break;
-                        }
-                        else
-                        {
-                            SendMessage("Name not found.");
-                            continue;
-                        }
-                    }
-                    else if (name == "create")
-                    {
-                        SendMessage("Enter new name.");
-                        string? newname = await Reader.ReadLineAsync();
-                        if (newname != null)
-                        {
-                            Player newplayer = new(newname);
-                            player = newplayer;
-                            Globals.playerList.Add(newplayer);
-                            break;
-                        }
-                    }
-                }
-                Globals.clientList.Add(this); //добавляется в лист класса Globals.
+                Globals.clientList.Add(this);
                 while (true)
                 {
                     var text = await Reader.ReadLineAsync();
-                    Console.WriteLine($"{player.userName}:{text}");
+                    Console.WriteLine($"{player.userName}{player.rase}:{text}");
                 }
             }
             catch
@@ -88,30 +61,6 @@ namespace HrontMUD
         {
             await Writer.WriteLineAsync(text);
             await Writer.FlushAsync();
-        }
-        public void AnswerToSender()
-        {
-        }
-        public void SendMsgToPrivate()
-        {
-            var found = Globals.clientList.Find(item => item.player.userName == "KAKAHA");
-            if (found != null)
-            {
-                found.SendMessage("Text");
-            }
-        }
-        public void SendMsgToGroup()
-        {
-        }
-        public void SendMsgToRoom()
-        {
-        }
-        public void SendMsgToAll()
-        {
-            foreach (var item in Globals.clientList)
-            {
-                item.SendMessage("");
-            }
         }
     }
 }

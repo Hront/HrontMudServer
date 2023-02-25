@@ -26,7 +26,6 @@ namespace HrontMUD
                     TcpClient tcpClient = await listener.AcceptTcpClientAsync();
                     Connection client = new(tcpClient);
                     Console.WriteLine($"Client connected: {tcpClient.Client.RemoteEndPoint}");
-                    await Task.Run(client.ClientLoop);
                 }
             }
             catch (Exception ex)

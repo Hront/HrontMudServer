@@ -10,29 +10,24 @@ namespace HrontMUD
     internal class Player
     {
         public string userName;
-        public int Age;
+        public string rase;
+        //public int Age;
 
-        public int Level;
-        public int Exp;
-        public int ExpToLevel;
+        //public int Level;
+        //public int Exp;
+        //public int ExpToLevel;
 
-        public int MaxHitPoint;
-        public int MaxManaPoint;
-        public int MaxMovePoint;
+        //public int MaxHitPoint;
+        //public int MaxManaPoint;
+        //public int MaxMovePoint;
 
-        int Str;
-        int Agi;
-        int Con;
-        int Wis;
-        int Int;
-
-        public Player(string name)
-        {
-            userName = name;
-        }
+        //int Str;
+        //int Agi;
+        //int Con;
+        //int Wis;
+        //int Int;
 
         //public List<Skills> skillsList = new ();
         //public List<Affects> affects = new ();
-
     }
 }
