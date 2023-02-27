@@ -13,7 +13,6 @@ namespace HrontMUD
         private string command;
         private string target;
         private string message;
-
         public Interpreter(Connection client, string text)
         {
             char[] delimiterChars = { ' ', '.' };
@@ -23,6 +22,5 @@ namespace HrontMUD
             target = words[1];
             message = words[2];
         }
-
     }
 }

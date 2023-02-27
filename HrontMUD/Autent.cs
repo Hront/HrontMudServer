@@ -23,6 +23,7 @@ namespace HrontMUD
         {
             try
             {
+                //Тут будет типа проверка есть ли такое имя и подтягивать player к соединению. Ну либо создание нового.
                 connection.SendMessage("Enter your Name");
                 var name = await connection.Reader.ReadLineAsync();
                 if (name != null)
